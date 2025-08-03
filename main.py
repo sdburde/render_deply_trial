@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from typing import List
 import uvicorn
@@ -14,6 +15,12 @@ class Todo(BaseModel):
     id: int | None = None
     title: str
     completed: bool = False
+
+
+# Redirect root to /docs
+@app.get("/")
+async def redirect_to_docs():
+    return RedirectResponse(url="/docs")
 
 # Endpoints
 @app.get("/todos", response_model=List[Todo])
