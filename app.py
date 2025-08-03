@@ -49,6 +49,7 @@ async def index():
 
 @app.get("/train")
 async def train_route():
+    # await asyncio.sleep(70)
     try:
         train_pipeline=TrainingPipeline()
         train_pipeline.run_pipeline()
@@ -60,15 +61,17 @@ async def train_route():
 async def predict_route(request:Request,file:UploadFile=File(...)):
     try:
         df=pd.read_csv(file.file)
-        preprocessor = load_object("/final_model/preprocessor.pkl")
-        final_model = load_object("/final_model/model.pkl")
+        preprocessor = load_object("final_model/preprocessor.pkl")
+        final_model = load_object("final_model/model.pkl")
         network_model=NetworkModel(preprocessor=preprocessor,model=final_model)
         print(df.iloc[0])
         y_pred=network_model.predict(df)
         print(y_pred)
         df['predicated_column']=y_pred
         print(df["predicated_column"])
-        df.to_csv("predication_output/output.csv")
+        pred_out = 'predication_output'
+        os.makedirs(pred_out, exist_ok=True)
+        df.to_csv(f"{pred_out}/output.csv")
         table_html=df.to_html(classes='table table-striped')
         return templates.TemplateResponse("table.html",{"request":request,"table":table_html})
 
@@ -78,6 +81,4 @@ async def predict_route(request:Request,file:UploadFile=File(...)):
 if __name__=="__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
-    
-# if __name__ == "__main__":
-#     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+

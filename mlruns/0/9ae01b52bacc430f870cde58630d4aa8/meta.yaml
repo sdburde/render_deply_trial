@@ -1,0 +1,14 @@
+artifact_uri: file:///D:/project/render_deply_trial/mlruns/0/9ae01b52bacc430f870cde58630d4aa8/artifacts
+end_time: 1754211751059
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9ae01b52bacc430f870cde58630d4aa8
+run_name: bemused-shoat-696
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754211750686
+status: 3
+tags: []
+user_id: Saurabh

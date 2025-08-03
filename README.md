@@ -99,46 +99,13 @@ python main.py
 ## Running the Web Server
 To start the FastAPI web server, run the app.py file. The server will be accessible at http://localhost:8000.
 
-
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload  
+uvicorn app:app --host localhost --port 8000 --reload
 
 ## Making Predictions
 Once the server is running, you can submit a CSV file to the /predict endpoint to get predictions. The application will process the data using the preprocessor and model, and return an HTML page with the results.
 
 You can use a tool like curl or Postman to send a file to the endpoint.
 
-
-
-
-
-## Local Development
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-2. Run the application:
-```bash
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-3. Access the API at `http://localhost:8000` and API docs at `http://localhost:8000/docs`
-
-## Deploying to Render
-1. Create a new Web Service on Render
-2. Connect your GitHub repository containing this code
-3. Configure the service:
-   - Runtime: Python 3
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn app:app --host 0.0.0.0 --port 8000 --reload  `
-4. Deploy the service
-
-## API Endpoints
-- GET `/todos`: List all todos
-- POST `/todos`: Create a new todo
-- PUT `/todos/{id}`: Update a todo
-- DELETE `/todos/{id}`: Delete a todo
-
-## Testing the API
-Use the interactive API documentation at `/docs` or tools like curl/Postman:
-```bash
-curl -X POST "http://your-render-url/todos" -H "Content-Type: application/json" -d '{"title":"Sample Todo","completed":false}'
-```
+Contact
+Himanshu - [himanshuborikar10@gmail.com]
+Project Link: https://github.com/himanshub0810/networksecurity

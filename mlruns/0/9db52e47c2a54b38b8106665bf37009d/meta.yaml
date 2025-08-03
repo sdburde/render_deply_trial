@@ -1,0 +1,14 @@
+artifact_uri: file:///D:/project/render_deply_trial/mlruns/0/9db52e47c2a54b38b8106665bf37009d/artifacts
+end_time: 1754211750602
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9db52e47c2a54b38b8106665bf37009d
+run_name: bedecked-shrimp-588
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754211750383
+status: 3
+tags: []
+user_id: Saurabh
