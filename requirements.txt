@@ -1,3 +1,18 @@
-fastapi==0.115.0
-uvicorn==0.30.6
-pydantic==2.9.2
+python-dotenv
+pandas
+numpy
+certifi
+pymongo
+pymongo[srv]>=4.3
+scikit-learn 
+ipykernel
+dill
+pyaml
+mlflow
+dagshub
+fastapi
+uvicorn
+python-multipart
+gunicorn
+# pymongo[srv]==3.6
+-e .

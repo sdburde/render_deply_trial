@@ -1,56 +1,43 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
-from typing import List
-import uvicorn
+from networksecurity.components.data_ingestion import DataIngestion
+from networksecurity.components.data_validation import DataValidation
+from networksecurity.components.data_transformation import DataTransformation
+from networksecurity.components.model_trainer import ModelTrainer
+from networksecurity.exception.exception import NetworkSecurityException
+from networksecurity.logging.logger import logging
+from networksecurity.entity.config_entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig
+from networksecurity.entity.config_entity import TrainingPipelineConfig
+import sys
 
-app = FastAPI(title="Simple Todo API")
+if __name__=="__main__":
+    try:
+        trainingpipelineconfig=TrainingPipelineConfig()
+        dataingestionconfig=DataIngestionConfig(trainingpipelineconfig)
+        data_ingestion=DataIngestion(dataingestionconfig)
+        logging.info("Initiate the data ingestion")
+        dataingestionartifact=data_ingestion.initiate_data_ingestion()
+        logging.info("Data initiation Completed")
+        print(dataingestionartifact)
 
-# In-memory storage for todos
-todos = []
-todo_id_counter = 1
+        data_validation_config=DataValidationConfig(trainingpipelineconfig)
+        data_validation=DataValidation(dataingestionartifact,data_validation_config)
+        logging.info("Initiate Data Validation")
+        data_validation_artifact=data_validation.initiate_data_validation()
+        logging.info("Data Validation Completed")
+        print(data_validation_artifact)
 
-# Pydantic model for Todo item
-class Todo(BaseModel):
-    id: int | None = None
-    title: str
-    completed: bool = False
+        logging.info("data transformation started")
+        data_transformation_config=DataTransformationConfig(trainingpipelineconfig)
+        data_transformation=DataTransformation(data_validation_artifact,data_transformation_config)
+        data_transformation_artifact=data_transformation.initiate_data_transformation()
+        print(data_transformation_artifact)
+        logging.info("data transformation completed")
 
+        logging.info("Model Trainer Started")
+        model_trainer_config=ModelTrainerConfig(trainingpipelineconfig)
+        model_trainer=ModelTrainer(model_trainer_config=model_trainer_config,data_transformation_artifact=data_transformation_artifact)
+        model_trainer_artifact=model_trainer.initiate_model_trainer()
+        logging.info("Model Trainer Artifact Created")
 
-# Redirect root to /docs
-@app.get("/")
-async def redirect_to_docs():
-    return RedirectResponse(url="/docs")
-
-# Endpoints
-@app.get("/todos", response_model=List[Todo])
-async def get_todos():
-    return todos
-
-@app.post("/todos", response_model=Todo)
-async def create_todo(todo: Todo):
-    global todo_id_counter
-    new_todo = Todo(id=todo_id_counter, title=todo.title, completed=todo.completed)
-    todos.append(new_todo)
-    todo_id_counter += 1
-    return new_todo
-
-@app.put("/todos/{todo_id}", response_model=Todo)
-async def update_todo(todo_id: int, updated_todo: Todo):
-    for todo in todos:
-        if todo.id == todo_id:
-            todo.title = updated_todo.title
-            todo.completed = updated_todo.completed
-            return todo
-    raise HTTPException(status_code=404, detail="Todo not found")
-
-@app.delete("/todos/{todo_id}")
-async def delete_todo(todo_id: int):
-    for i, todo in enumerate(todos):
-        if todo.id == todo_id:
-            todos.pop(i)
-            return {"message": "Todo deleted"}
-    raise HTTPException(status_code=404, detail="Todo not found")
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    except Exception as e:
+        raise NetworkSecurityException(e,sys)
